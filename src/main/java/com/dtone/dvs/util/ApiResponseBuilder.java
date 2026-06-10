@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hc.client5.http.entity.mime.Header;
+import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
 
@@ -51,7 +51,7 @@ public class ApiResponseBuilder {
 				}).getErrors());
 			} else {
 				apiResponse.getErrors()
-						.add(new ApiError(String.valueOf(statusCode), response.getStatusLine().getReasonPhrase()));
+						.add(new ApiError(String.valueOf(statusCode), response.getReasonPhrase()));
 			}
 
 		}
@@ -60,7 +60,7 @@ public class ApiResponseBuilder {
 
 	private static <T> void setPageDetails(ApiResponse<T> apiResponse, Header[] headers) {
 		for (Header header : headers) {
-			switch (header.()) {
+			switch (header.getName()) {
 			case Constants.CURRENT_PAGE_HEADER:
 				apiResponse.setCurrentPage(Integer.parseInt(header.getValue()));
 				break;
