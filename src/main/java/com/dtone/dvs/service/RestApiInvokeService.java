@@ -10,9 +10,15 @@ import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.CredentialsProvider;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 
 public class RestApiInvokeService {
 
@@ -25,7 +31,7 @@ public class RestApiInvokeService {
 		this.apiKey = apiKey;
 		this.apiSecret = apiSecret;
 		BasicCredentialsProvider provider = new BasicCredentialsProvider();
-		provider.setCredentials(AuthScope(), new UsernamePasswordCredentials(this.getApiKey(), this.getApiSecret().toCharArray()));
+		provider.setCredentials(new AuthScope(null, null, -1,null, null), new UsernamePasswordCredentials(this.getApiKey(), this.getApiSecret().toCharArray()));
 		final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 		httpClientBuilder.setDefaultCredentialsProvider(provider);
 		httpClient = httpClientBuilder.build();
@@ -58,7 +64,7 @@ public class RestApiInvokeService {
 		return httpPost;
 	}
 
-	private static HttpGet getHttpGet(String url) {
+	private static ClassicHttpRequest getHttpGet(String url) {
 		return new HttpGet(url);
 	}
 
