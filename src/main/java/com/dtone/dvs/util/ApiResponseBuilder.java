@@ -2,10 +2,6 @@ package com.dtone.dvs.util;
 
 import java.io.IOException;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-
 import com.dtone.dvs.dto.ApiError;
 import com.dtone.dvs.dto.ApiResponse;
 import com.dtone.dvs.dto.ErrorResponse;
@@ -17,6 +13,9 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.hc.client5.http.entity.mime.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpResponse;
 
 public class ApiResponseBuilder {
 
@@ -35,12 +34,12 @@ public class ApiResponseBuilder {
 	 */
 	public <T> ApiResponse<T> prepareResponse(ApiResponse<T> apiResponse, TypeReference<T> typeReference,
 			HttpResponse response) throws IOException {
-		int statusCode = response.getStatusLine().getStatusCode();
-		setPageDetails(apiResponse, response.getAllHeaders());
+		int statusCode = response.getCode();
+		setPageDetails(apiResponse, response.getHeaders());
 
 		apiResponse.setCode(statusCode);
 		apiResponse.setSuccess(true);
-		HttpEntity httpEntity = response.getEntity();
+		HttpEntity httpEntity = response.;
 
 		if (statusCode < 400) {
 			apiResponse.setResult(extractResult(httpEntity, typeReference));
@@ -61,7 +60,7 @@ public class ApiResponseBuilder {
 
 	private static <T> void setPageDetails(ApiResponse<T> apiResponse, Header[] headers) {
 		for (Header header : headers) {
-			switch (header.getName()) {
+			switch (header.()) {
 			case Constants.CURRENT_PAGE_HEADER:
 				apiResponse.setCurrentPage(Integer.parseInt(header.getValue()));
 				break;
