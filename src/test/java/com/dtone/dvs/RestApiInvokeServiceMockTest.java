@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -26,7 +26,7 @@ public class RestApiInvokeServiceMockTest {
 	RestApiInvokeService mockRestApiInvokeService = new RestApiInvokeService("", "", mockHttpClient);
 
 	@Mock
-    HttpResponse mockHttpResponse = mock(HttpResponse.class);
+	ClassicHttpResponse mockHttpResponse = mock(ClassicHttpResponse.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -62,5 +62,4 @@ public class RestApiInvokeServiceMockTest {
 		when(mockRestApiInvokeService.getHttpClient().execute(Mockito.any())).thenThrow(new ClientProtocolException());
 		mockRestApiInvokeService.executePost("", new TransactionRequest());
 	}
-
 }

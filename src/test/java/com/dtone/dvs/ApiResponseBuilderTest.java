@@ -11,13 +11,14 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.message.BasicHeader;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.message.BasicHeader;
+import org.apache.hc.core5.http.message.StatusLine;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -40,11 +41,11 @@ public class ApiResponseBuilderTest {
 	HttpGet mockHttpGet = mock(HttpGet.class);
 	DvsApiClient mockDvsClient = mock(DvsApiClient.class);
 	HttpResponse mockHttpResponse = mock(HttpResponse.class);
-	StatusLine mockStatusLine = mock(StatusLine.class);
+	//StatusLine mockStatusLine = mock(StatusLine.class);
 	HttpEntity mockHttpEntity = mock(HttpEntity.class);
 
 	@Mock
-	HttpResponse httpResponse = mock(CloseableHttpResponse.class);
+	ClassicHttpResponse httpResponse = mock(ClassicHttpResponse.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -54,10 +55,10 @@ public class ApiResponseBuilderTest {
 	@Test
 	public void testHttpGetSuccessResponse() throws Exception {
 		
-		when(httpResponse.getStatusLine()).thenReturn(mockStatusLine);
-		when(mockStatusLine.getStatusCode()).thenReturn(200);
+		//when(httpResponse.).thenReturn(mockStatusLine);
+		//hen(mockStatusLine.getStatusCode()).thenReturn(200);
 
-		when(httpResponse.getAllHeaders()).thenReturn(MockTestUtils.getMockHttpHeaders());
+		when(httpResponse.getHeaders()).thenReturn(MockTestUtils.getMockHttpHeaders());
 
 		when(httpResponse.getEntity()).thenReturn(mockHttpEntity);
 
@@ -74,11 +75,11 @@ public class ApiResponseBuilderTest {
 
 	@Test
 	public void testHttpGetFailureResponse() throws Exception {
-		when(httpResponse.getStatusLine()).thenReturn(mockStatusLine);
-		when(mockStatusLine.getStatusCode()).thenReturn(404);
+//		when(httpResponse.getStatusLine()).thenReturn(mockStatusLine);
+		when(httpResponse.getCode()).thenReturn(404);
 
 		Header[] mockHeaders = new Header[] { new BasicHeader("a", "b") };
-		when(httpResponse.getAllHeaders()).thenReturn(mockHeaders);
+		when(httpResponse.getHeaders()).thenReturn(mockHeaders);
 
 		when(httpResponse.getEntity()).thenReturn(mockHttpEntity);
 
@@ -98,12 +99,12 @@ public class ApiResponseBuilderTest {
 	
 	@Test
 	public void testHttpGetFailureResponse429() throws Exception {
-		when(httpResponse.getStatusLine()).thenReturn(mockStatusLine);
-		when(mockStatusLine.getStatusCode()).thenReturn(429);
-		when(mockStatusLine.getReasonPhrase()).thenReturn("Too many requests");
+//		when(httpResponse.getStatusLine()).thenReturn(mockStatusLine);
+		when(httpResponse.getCode()).thenReturn(429);
+		//when(mockStatusLine.getReasonPhrase()).thenReturn("Too many requests");
 
 		Header[] mockHeaders = new Header[] { new BasicHeader("a", "b") };
-		when(httpResponse.getAllHeaders()).thenReturn(mockHeaders);
+		when(httpResponse.getHeaders()).thenReturn(mockHeaders);
 
 		when(httpResponse.getEntity()).thenReturn(mockHttpEntity);
 

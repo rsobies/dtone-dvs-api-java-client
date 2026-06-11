@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
@@ -33,13 +34,13 @@ public class ApiResponseBuilder {
 	 * @throws DvsApiException
 	 */
 	public <T> ApiResponse<T> prepareResponse(ApiResponse<T> apiResponse, TypeReference<T> typeReference,
-			HttpResponse response) throws IOException {
+	                                          ClassicHttpResponse response) throws IOException {
 		int statusCode = response.getCode();
 		setPageDetails(apiResponse, response.getHeaders());
 
 		apiResponse.setCode(statusCode);
 		apiResponse.setSuccess(true);
-		HttpEntity httpEntity = response.;
+		HttpEntity httpEntity = response.getEntity();
 
 		if (statusCode < 400) {
 			apiResponse.setResult(extractResult(httpEntity, typeReference));

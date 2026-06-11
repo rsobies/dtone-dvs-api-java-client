@@ -14,10 +14,7 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.*;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
 public class RestApiInvokeService {
@@ -43,12 +40,12 @@ public class RestApiInvokeService {
 		this.httpClient = httpClient;
 	}
 
-	public HttpResponse executeGet(String url) throws IOException {
-		return httpClient.execute(getHttpGet(url));
+	public ClassicHttpResponse executeGet(String url) throws IOException {
+		return (ClassicHttpResponse) httpClient.execute(getHttpGet(url));
 	}
 
-	public HttpResponse executePost(String url, ApiRequest apiRequest) throws IOException {
-		return httpClient.execute(getHttpPost(url, apiRequest));
+	public ClassicHttpResponse executePost(String url, ApiRequest apiRequest) throws IOException {
+		return (ClassicHttpResponse) httpClient.execute(getHttpPost(url, apiRequest));
 	}
 
 	private static HttpPost getHttpPost(String url, ApiRequest apiRequest)
