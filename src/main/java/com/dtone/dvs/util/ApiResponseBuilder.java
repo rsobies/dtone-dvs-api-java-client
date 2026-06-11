@@ -35,29 +35,33 @@ public class ApiResponseBuilder {
 	 */
 	public <T> ApiResponse<T> prepareResponse(ApiResponse<T> apiResponse, TypeReference<T> typeReference,
 	                                          ClassicHttpResponse response) throws IOException {
-		int statusCode = response.getCode();
-		setPageDetails(apiResponse, response.getHeaders());
+		try{
+			int statusCode = response.getCode();
+			setPageDetails(apiResponse, response.getHeaders());
 
-		apiResponse.setCode(statusCode);
-		apiResponse.setSuccess(true);
-		HttpEntity httpEntity = response.getEntity();
+			apiResponse.setCode(statusCode);
+			apiResponse.setSuccess(true);
+			HttpEntity httpEntity = response.getEntity();
 
-		if (statusCode < 400) {
-			apiResponse.setResult(extractResult(httpEntity, typeReference));
-		} else {
-			apiResponse.setSuccess(false);
-
-			if (httpEntity != null && response.getEntity().getContent().available() != 0) {
-				apiResponse.setErrors(extractResult(httpEntity, new TypeReference<ErrorResponse>() {
-				}).getErrors());
+			if (statusCode < 400) {
+				apiResponse.setResult(extractResult(httpEntity, typeReference));
 			} else {
-				apiResponse.getErrors()
-						.add(new ApiError(String.valueOf(statusCode), response.getReasonPhrase()));
-			}
+				apiResponse.setSuccess(false);
 
+				if (httpEntity != null && response.getEntity().getContent().available() != 0) {
+					apiResponse.setErrors(extractResult(httpEntity, new TypeReference<ErrorResponse>() {
+					}).getErrors());
+				} else {
+					apiResponse.getErrors()
+							.add(new ApiError(String.valueOf(statusCode), response.getReasonPhrase()));
+				}
+
+			}
+			return apiResponse;
 		}
-		response.close();
-		return apiResponse;
+		finally {
+			response.close();
+		}
 	}
 
 	private static <T> void setPageDetails(ApiResponse<T> apiResponse, Header[] headers) {
